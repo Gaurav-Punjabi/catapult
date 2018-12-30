@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="catapult:jar">
+    <output-path>$PROJECT_DIR$/../demo</output-path>
+    <root id="archive" name="MochaFramework.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/../demo/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="Catapult" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/gson-2.2.2.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

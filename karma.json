@@ -1,0 +1,8 @@
+{
+  "packageName": "com.knowwhere.demo",
+  "server": "localhost",
+  "port": "3306",
+  "databaseName": "steel_erp",
+  "username": "root",
+  "password": "password"
+}
