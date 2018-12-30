@@ -27,7 +27,7 @@ public class ServiceGeneratorService {
             serviceCode.append("@Service").append(NEXT_LINE);
             serviceCode.append("public " + modelName + "Service {").append(NEXT_LINE).append(NEXT_LINE);
             serviceCode.append(INDENT).append("@Autowired").append(NEXT_LINE);
-            serviceCode.append(INDENT).append("private " + modelName + "Repository" + " " + CodeUtils.toCamelCase(modelName) + ";").append(NEXT_LINE).append(NEXT_LINE);
+            serviceCode.append(INDENT).append("private " + modelName + "Repository" + " " + CodeUtils.toCamelCase(modelName) + "Repository;").append(NEXT_LINE).append(NEXT_LINE);
 
             // Generating findById method
             serviceCode.append(INDENT).append("public " + modelName + " findById(int id) {").append(NEXT_LINE);
@@ -36,7 +36,7 @@ public class ServiceGeneratorService {
 
             // Generating getAll method
             serviceCode.append(NEXT_LINE).append(INDENT).append("public List<" + modelName + "> findAll() {").append(NEXT_LINE);
-            serviceCode.append(INDENT).append(INDENT).append("return this." + CodeUtils.toCamelCase(modelName) + ".findAll();").append(NEXT_LINE);
+            serviceCode.append(INDENT).append(INDENT).append("return this." + CodeUtils.toCamelCase(modelName) + "Repository.findAll();").append(NEXT_LINE);
             serviceCode.append(INDENT).append('}').append(NEXT_LINE).append(NEXT_LINE);
 
             serviceCode.append('}').append(NEXT_LINE);

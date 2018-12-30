@@ -2,6 +2,7 @@ package com.knowwhere.catapult.services;
 
 import com.google.gson.Gson;
 import com.knowwhere.catapult.models.Catapult;
+import com.knowwhere.catapult.models.Model;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -11,20 +12,29 @@ import static com.knowwhere.catapult.constants.CommonConstants.SOURCE_FILE_NAME;
 public class CatapultService {
       private Catapult catapult;
 
-      public CatapultService() {
+      public CatapultService(Catapult catapult) {
+            this.catapult = catapult;
+      }
+
+      public static CatapultService fetch() {
             File file = new File(SOURCE_FILE_NAME);
             if(file.exists()) {
                   Gson gson = new Gson();
                   try {
                         String karmaContent = new String(Files.readAllBytes(new File(SOURCE_FILE_NAME).toPath()));
                         Catapult catapult = gson.fromJson(karmaContent, Catapult.class);
-                        this.catapult = catapult;
+                        return new CatapultService(catapult);
                   } catch (IOException ioe) {
                         System.out.println("Some error occured while watching karma.");
                   }
-                  return;
+                  return null;
             }
+            return null;
+      }
+
+      public static CatapultService init() {
             try {
+                  File file = new File(SOURCE_FILE_NAME);
                   Files.createFile(file.toPath());
                   BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 
@@ -49,14 +59,41 @@ public class CatapultService {
                   System.out.print("Enter the base path for the api : ");
                   String apiPath = bufferedReader.readLine();
 
-                  this.catapult = new Catapult(packageName, location, port, database, username, password, apiPath);
-                  this.saveState();
+                  Catapult catapult = new Catapult(packageName, location, port, database, username, password, apiPath);
 
+                  CatapultService catapultService = new CatapultService(catapult);
+                  catapultService.saveState();
 
-                  System.out.println("\n\n\nCatapult has taken over the project.");
-                  System.out.println("Happy coding!!");
+                  return catapultService;
             } catch (IOException ioe) {
                   ioe.printStackTrace();
+            }
+            return null;
+      }
+
+      public void generateModel(String args[]) {
+            ModelGeneratorService modelGeneratorService = new ModelGeneratorService(this.catapult);
+            ModelService modelService = new ModelService();
+            QueryGeneratorService queryGeneratorService = new QueryGeneratorService();
+
+            // Acquiring the properties of the model
+            String modelContent[] = new String [args.length - 2];
+            System.arraycopy(args, 2, modelContent, 0, args.length - 2);
+
+            Model model= modelService.parseModel(modelContent);
+            String modelCode = modelGeneratorService.generateModel(model);
+            String query = queryGeneratorService.generateQueryFromModel(model);
+
+            this.getCatapult().putQuery(model.getName(), query);
+            this.saveState();
+
+            try {
+                  File file = new File("./src/main/java/" + this.getCatapult().getPackageName().replaceAll("\\.", "/") + "/models/" + model.getName() + ".java");
+                  file.getParentFile().mkdirs();
+                  Files.createFile(file.toPath());
+                  new FileOutputStream(file).write(modelCode.getBytes());;
+            } catch (IOException ioe) {
+                  ioe.printStackTrace();;
             }
       }
 

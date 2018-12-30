@@ -9,14 +9,9 @@ import static com.knowwhere.catapult.constants.DatatypeConstants.TEXT;
 import static com.knowwhere.catapult.constants.DatatypeConstants.VARCHAR;
 
 public class ModelGeneratorService {
-      /**
-       * The name of the package of the this project.
-       */
-      private String packageName;
       // Just a constant for readable code
       private static final String NEXT_LINE = "\n";
       private Catapult catapult;
-
 
       public ModelGeneratorService(Catapult catapult) {
             this.catapult = catapult;
@@ -179,9 +174,6 @@ public class ModelGeneratorService {
             return ModelConstants.PACAKGE + this.catapult.getPackageName() + ".models;\n";
       }
 
-      public String getPackageName() {
-            return packageName;
-      }
 
       private interface ModelConstants {
             String PACAKGE = "package ";
